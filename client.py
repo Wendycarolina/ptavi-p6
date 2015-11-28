@@ -5,11 +5,13 @@ Programa cliente que abre un socket a un servidor
 """
 
 import socket
+import sys
+import os
 
 # Cliente UDP simple.
 
 # Argumentos que introduce el cliente.
-try 
+try:
     METODO = sys.argv[1].upper()
     DATOS = sys.argv[2]
     ADRESS = DATOS.split(':')[0]
@@ -30,7 +32,7 @@ print("Enviando: " + LINE)
 my_socket.send(LINE + '\r\n')
 data = my_socket.recv(1024)
 
-print('Recibido -- ', data.decode('utf-8'))
+print('Recibido -- ', data.)
 print("Terminando socket...")
 
 # Cerramos todo
