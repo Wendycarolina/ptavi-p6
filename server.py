@@ -8,14 +8,11 @@ import socketserver
 import sys
 import os
 
-
 class EchoHandler(socketserver.DatagramRequestHandler):
     """
     Echo server class
     """
     def handle(self):
-        # Escribe dirección y puerto del cliente (de tupla client_address)
-        self.wfile.write(b"Hemos recibido tu peticion" + b'\r\n\r\n' )
         while 1:
             # Leyendo línea a línea lo que nos envía el cliente
             line = self.rfile.read()
@@ -31,19 +28,19 @@ class EchoHandler(socketserver.DatagramRequestHandler):
                     message += b'SIP/2.0 ' + b'180 RINGING' + b'\r\n\r\n'
                     message += b'SIP/2.0 ' + b'200 OK' + b'\r\n\r\n'
                     self.wfile.write(message)
-                elif len(linea) != 3 or linea.split()[2] != 'SIP/2.0':
-                    message = b'SIP/2.0 ' + b'400 Bad Request' + b'\r\n'
-                    self.wfile.write(message)
                 elif Metodo == 'ACK':
                     # aEjecutar es un string con lo que se ha de ejecutar en la shell
-                    aEjecutar = 'mp32rtp -i '+ IP + ' -p 23032 < ' + AUDIO
+                    aEjecutar = './mp32rtp -i '+ IP + ' -p 23032 < ' + AUDIO
                     print("Vamos a ejecutar", aEjecutar)
                     os.system(aEjecutar)
                 elif Metodo =='BYE':
                     message = b'SIP/2.0 ' + b'200 OK' + b'\r\n\r\n'
                     self.wfile.write(message)
-                else:
+                elif not Metodo in List:
                     message = b'SIP/2.0 ' + b'405 Method Not Allowed'
+                    self.wfile.write(message)
+                else:
+                    message = b'SIP/2.0 ' + b'400 Bad Request' + b'\r\n'
                     self.wfile.write(message)
             else:
                 break
@@ -54,6 +51,7 @@ if __name__ == "__main__":
         IP = sys.argv[1]
         PORT = int(sys.argv[2])
         AUDIO = sys.argv[3]
+        List = ['INVITE','ACK','BYE']
         if len(sys.argv) != 4 or not os.path.exists(AUDIO):
             print('Usage: python server.py IP port audio_file')
             raise SystemExit
