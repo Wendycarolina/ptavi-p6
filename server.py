@@ -8,6 +8,7 @@ import socketserver
 import sys
 import os
 
+
 class EchoHandler(socketserver.DatagramRequestHandler):
     """
     Echo server class
@@ -29,11 +30,11 @@ class EchoHandler(socketserver.DatagramRequestHandler):
                     message += b'SIP/2.0 ' + b'200 OK' + b'\r\n\r\n'
                     self.wfile.write(message)
                 elif Metodo == 'ACK':
-                    # aEjecutar es un string con lo que se ha de ejecutar en la shell
-                    aEjecutar = './mp32rtp -i '+ IP + ' -p 23032 < ' + AUDIO
+                    #ejecutar en la shell
+                    aEjecutar = './mp32rtp -i ' + IP + ' -p 23032 < ' + AUDIO
                     print("Vamos a ejecutar", aEjecutar)
                     os.system(aEjecutar)
-                elif Metodo =='BYE':
+                elif Metodo == 'BYE':
                     message = b'SIP/2.0 ' + b'200 OK' + b'\r\n\r\n'
                     self.wfile.write(message)
                 elif not Metodo in List:
@@ -45,13 +46,14 @@ class EchoHandler(socketserver.DatagramRequestHandler):
             else:
                 break
 
+
 if __name__ == "__main__":
     #Argumentos del servidor
     try:
         IP = sys.argv[1]
         PORT = int(sys.argv[2])
         AUDIO = sys.argv[3]
-        List = ['INVITE','ACK','BYE']
+        List = ['INVITE', 'ACK', 'BYE']
         if len(sys.argv) != 4 or not os.path.exists(AUDIO):
             print('Usage: python server.py IP port audio_file')
             raise SystemExit
