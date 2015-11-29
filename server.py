@@ -25,12 +25,16 @@ class EchoHandler(socketserver.DatagramRequestHandler):
             Metodo = linea[0]
             print(Metodo)
             if Metodo == 'INVITE':
-                envio = b'SIP/2.0 ' + b'100 TRYING ' + b'\r\n\r\n'
-                envio += b'SIP/2.0 ' + b'180 RINGING ' + b'\r\n\r\n'
-                envio += b'SIP/2.0 ' + b'200 OK ' + b'\r\n\r\n'
-                self.wfile.write(envio)
-                print(envio)
-            
+                message = b'SIP/2.0 ' + b'100 TRYING ' + b'\r\n\r\n'
+                message += b'SIP/2.0 ' + b'180 RINGING ' + b'\r\n\r\n'
+                message += b'SIP/2.0 ' + b'200 OK ' + b'\r\n\r\n'
+                self.wfile.write(message)
+                print(message)
+            elif len(linea) != 3 or linea[2] != 'SIP/2.0':
+                message = b'SIP/2.0 ' + b'400 Bad Request' + b'\r\n'
+                self.wfile.write(message)
+            else:
+                print('error')
             # Si no hay más líneas salimos del bucle infinito
             if not line:
                 break
