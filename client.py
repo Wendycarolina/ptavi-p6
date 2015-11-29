@@ -15,10 +15,10 @@ try:
     PORT = int(DATOS.split('@')[1].split(':')[1])
     SERVER = DATOS.split('@')[1].split(':')[0]
     if len(sys.argv) != 3:
-       print('Usage: python client.py method receiver@IP:SIPport')
-       raise SystemExit
+        print('Usage: python client.py method receiver@IP:SIPport')
+        raise SystemExit
 except IndexError:
-    sys.exit('Usage: python client.py method receiver@IP:SIPport') 
+    sys.exit('Usage: python client.py method receiver@IP:SIPport')
 
 # Contenido que vamos a enviar
 LINE = METODO + ' sip:' + ADDRESS + ' SIP/2.0' + '\r\n'
@@ -30,9 +30,8 @@ my_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 my_socket.connect((SERVER, PORT))
 try:
     print("Enviando: " + LINE)
-    my_socket.send(bytes(LINE  + '\r\n','utf-8'))
+    my_socket.send(bytes(LINE + '\r\n', 'utf-8'))
     data = my_socket.recv(1024)
-        
     print('Recibido -- ', data.decode('utf-8'))
     Data = data.split()
     if METODO == 'INVITE':
@@ -40,11 +39,10 @@ try:
         Ring = Data[4].decode('utf-8')
         Ok = Data[7].decode('utf-8')
         #Respuesta si recibe un Trying, Ring y OK
-        if Trying == '100' and Ring =='180' and Ok =='200':
-            LINE = 'ACK'+ ' sip:' + ADDRESS + ' SIP/2.0'
+        if Trying == '100' and Ring == '180' and Ok == '200':
+            LINE = 'ACK' + ' sip:' + ADDRESS + ' SIP/2.0'
             print("Enviando: " + LINE)
-            my_socket.send(bytes(LINE  + '\r\n','utf-8'))
-    
+            my_socket.send(bytes(LINE + '\r\n', 'utf-8'))
     # Cerramos todo
     my_socket.close()
     print("Fin.")
