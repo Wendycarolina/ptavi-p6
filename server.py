@@ -33,8 +33,6 @@ class EchoHandler(socketserver.DatagramRequestHandler):
             elif len(linea) != 3 or linea[2] != 'SIP/2.0':
                 message = b'SIP/2.0 ' + b'400 Bad Request' + b'\r\n'
                 self.wfile.write(message)
-            else:
-                print('error')
             # Si no hay más líneas salimos del bucle infinito
             if not line:
                 break
