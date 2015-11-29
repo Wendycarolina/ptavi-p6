@@ -35,10 +35,13 @@ class EchoHandler(socketserver.DatagramRequestHandler):
                 self.wfile.write(message)
             elif Metodo == 'ACK':
                 # aEjecutar es un string con lo que se ha de ejecutar en la shell
-                aEjecutar = 'mp32rtp -i '+ IP ' -p 23032 < ' + AUDIO
+                aEjecutar = 'mp32rtp -i '+ IP + ' -p 23032 < ' + AUDIO
                 print("Vamos a ejecutar", aEjecutar)
                 os.system(aEjecutar)
-                
+            elif Metodo =='BYE':
+                message = b'SIP/2.0 ' + b'200 OK' + b'\r\n\r\n'
+                self.wfile.write(message)
+            
             # Si no hay más líneas salimos del bucle infinito
             if not line:
                 break
