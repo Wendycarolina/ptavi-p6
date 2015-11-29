@@ -21,8 +21,8 @@ class EchoHandler(socketserver.DatagramRequestHandler):
             line = self.rfile.read()
             linea = line.decode('utf-8')
             print("El cliente nos manda " + linea)
-            linea = linea.split()
-            Metodo = linea[0]
+            Metodo = linea.split()[0]
+            IP = self.client_address[0]
             print(Metodo)
             if Metodo == 'INVITE':
                 message = b'SIP/2.0 ' + b'100 TRYING ' + b'\r\n\r\n'
@@ -33,6 +33,12 @@ class EchoHandler(socketserver.DatagramRequestHandler):
             elif len(linea) != 3 or linea[2] != 'SIP/2.0':
                 message = b'SIP/2.0 ' + b'400 Bad Request' + b'\r\n'
                 self.wfile.write(message)
+            elif Metodo == 'ACK':
+                # aEjecutar es un string con lo que se ha de ejecutar en la shell
+                aEjecutar = 'mp32rtp -i '+ IP ' -p 23032 < ' + AUDIO
+                print("Vamos a ejecutar", aEjecutar)
+                os.system(aEjecutar)
+                
             # Si no hay más líneas salimos del bucle infinito
             if not line:
                 break
